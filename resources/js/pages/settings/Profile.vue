@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Form, Head, Link, usePage } from '@inertiajs/vue3';
+import { useForm, Head, Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/DeleteUser.vue';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
@@ -10,7 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import { edit } from '@/routes/profile';
 import { send } from '@/routes/verification';
 import type { BreadcrumbItem } from '@/types';
 
@@ -24,12 +22,17 @@ defineProps<Props>();
 const breadcrumbItems: BreadcrumbItem[] = [
     {
         title: 'Profile settings',
-        href: edit(),
+        href: '/settings/profile',
     },
 ];
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
+
+const form = useForm({
+    name: user.value?.name ?? '',
+    email: user.value?.email ?? '',
+});
 </script>
 
 <template>
@@ -46,23 +49,18 @@ const user = computed(() => page.props.auth.user);
                     description="Update your name and email address"
                 />
 
-                <Form
-                    v-bind="ProfileController.update.form()"
-                    class="space-y-6"
-                    v-slot="{ errors, processing, recentlySuccessful }"
-                >
+                <form @submit.prevent="form.patch('/settings/profile', { preserveScroll: true })" class="space-y-6">
                     <div class="grid gap-2">
                         <Label for="name">Name</Label>
                         <Input
                             id="name"
+                            v-model="form.name"
                             class="mt-1 block w-full"
-                            name="name"
-                            :default-value="user.name"
                             required
                             autocomplete="name"
                             placeholder="Full name"
                         />
-                        <InputError class="mt-2" :message="errors.name" />
+                        <InputError class="mt-2" :message="form.errors.name" />
                     </div>
 
                     <div class="grid gap-2">
@@ -70,17 +68,16 @@ const user = computed(() => page.props.auth.user);
                         <Input
                             id="email"
                             type="email"
+                            v-model="form.email"
                             class="mt-1 block w-full"
-                            name="email"
-                            :default-value="user.email"
                             required
                             autocomplete="username"
                             placeholder="Email address"
                         />
-                        <InputError class="mt-2" :message="errors.email" />
+                        <InputError class="mt-2" :message="form.errors.email" />
                     </div>
 
-                    <div v-if="mustVerifyEmail && !user.email_verified_at">
+                    <div v-if="mustVerifyEmail && !user?.email_verified_at">
                         <p class="-mt-4 text-sm text-muted-foreground">
                             Your email address is unverified.
                             <Link
@@ -96,33 +93,17 @@ const user = computed(() => page.props.auth.user);
                             v-if="status === 'verification-link-sent'"
                             class="mt-2 text-sm font-medium text-green-600"
                         >
-                            A new verification link has been sent to your email
-                            address.
+                            A new verification link has been sent to your email address.
                         </div>
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <Button
-                            :disabled="processing"
-                            data-test="update-profile-button"
-                            >Save</Button
-                        >
-
-                        <Transition
-                            enter-active-class="transition ease-in-out"
-                            enter-from-class="opacity-0"
-                            leave-active-class="transition ease-in-out"
-                            leave-to-class="opacity-0"
-                        >
-                            <p
-                                v-show="recentlySuccessful"
-                                class="text-sm text-neutral-600"
-                            >
-                                Saved.
-                            </p>
+                        <Button :disabled="form.processing" data-test="update-profile-button">Save</Button>
+                        <Transition enter-active-class="transition ease-in-out" enter-from-class="opacity-0" leave-active-class="transition ease-in-out" leave-to-class="opacity-0">
+                            <p v-show="form.recentlySuccessful" class="text-sm text-neutral-600">Saved.</p>
                         </Transition>
                     </div>
-                </Form>
+                </form>
             </div>
 
             <DeleteUser />
