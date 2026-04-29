@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('special_offers', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('layanan_id')->nullable()->constrained('layanan', 'layanan_id')->nullOnDelete();
+            $table->foreignUuid('layanan_id')->nullable()->constrained('layanan')->nullOnDelete();
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('description')->nullable();

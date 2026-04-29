@@ -2,7 +2,8 @@
 
 namespace App\Services\Layanan;
 
-use App\DTOs\Layanan\LayananDTO;
+use App\DTOs\Layanan\CreateLayananDTO;
+use App\DTOs\Layanan\UpdateLayananDTO;
 use App\Models\Trip\Layanan;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -17,9 +18,9 @@ interface LayananInterface
 
     public function getActiveList(): Collection;
 
-    public function create(LayananDTO $dto): Layanan;
+    public function create(CreateLayananDTO $dto): Layanan;
 
-    public function update(string $id, LayananDTO $dto): Layanan;
+    public function update(string $id, UpdateLayananDTO $dto): Layanan;
 
     public function delete(string $id): void;
 

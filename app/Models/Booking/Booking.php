@@ -15,7 +15,7 @@ class Booking extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $primaryKey = 'booking_id';
+    // protected $primaryKey = 'id';
 
     protected $fillable = [
         'booking_number',
@@ -64,7 +64,7 @@ class Booking extends Model
 
     public function layanan(): BelongsTo
     {
-        return $this->belongsTo(Layanan::class, 'layanan_id', 'layanan_id');
+        return $this->belongsTo(Layanan::class);
     }
 
     public function specialOffer(): BelongsTo

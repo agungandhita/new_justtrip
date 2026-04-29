@@ -1,0 +1,282 @@
+
+   PASS  Tests\Unit\ExampleTest
+  ✓ that true is true                                                    0.10s  
+
+   FAIL  Tests\Feature\Auth\AuthenticationTest
+  ✓ login screen can be rendered                                         0.80s  
+  ⨯ users can authenticate using the login screen                        0.11s  
+  ⨯ users with two factor enabled are redirected to two factor challeng… 0.08s  
+  ⨯ users can not authenticate with invalid password                     0.02s  
+  ⨯ users can logout                                                     0.02s  
+  ⨯ users are rate limited                                               0.02s  
+
+   FAIL  Tests\Feature\Auth\EmailVerificationTest
+  ✓ email verification screen can be rendered                            0.03s  
+  ⨯ email can be verified                                                0.03s  
+  ✓ email is not verified with invalid hash                              0.03s  
+  ✓ email is not verified with invalid user id                           0.03s  
+  ⨯ verified user is redirected to dashboard from verification prompt    0.02s  
+  ⨯ already verified user visiting verification link is redirected with… 0.02s  
+
+   PASS  Tests\Feature\Auth\PasswordConfirmationTest
+  ✓ confirm password screen can be rendered                              0.04s  
+  ✓ password confirmation requires authentication                        0.02s  
+
+   PASS  Tests\Feature\Auth\PasswordResetTest
+  ✓ reset password link screen can be rendered                           0.03s  
+  ✓ reset password link can be requested                                 0.23s  
+  ✓ reset password screen can be rendered                                0.24s  
+  ✓ password can be reset with valid token                               0.24s  
+  ✓ password cannot be reset with invalid token                          0.24s  
+
+   WARN  Tests\Feature\Auth\RegistrationTest
+  - registration screen can be rendered → Fortify feature [registration] is not enabled.
+  - new users can register → Fortify feature [registration] is not enabled.
+
+   FAIL  Tests\Feature\Auth\TwoFactorChallengeTest
+  ✓ two factor challenge redirects to login when not authenticated       0.03s  
+  ⨯ two factor challenge can be rendered                                 0.02s  
+
+   FAIL  Tests\Feature\Auth\VerificationNotificationTest
+  ✓ sends verification notification                                      0.02s  
+  ⨯ does not send verification notification if email is verified         0.02s  
+
+   FAIL  Tests\Feature\DashboardTest
+  ⨯ guests are redirected to the login page                              0.01s  
+  ⨯ authenticated users can visit the dashboard                          0.02s  
+
+   PASS  Tests\Feature\ExampleTest
+  ✓ returns a successful response                                        0.03s  
+
+   PASS  Tests\Feature\Settings\ProfileUpdateTest
+  ✓ profile page is displayed                                            0.03s  
+  ✓ profile information can be updated                                   0.02s  
+  ✓ email verification status is unchanged when the email address is un… 0.03s  
+  ✓ user can delete their account                                        0.02s  
+  ✓ correct password must be provided to delete account                  0.02s  
+
+   PASS  Tests\Feature\Settings\SecurityTest
+  ✓ security page is displayed                                           0.03s  
+  ✓ security page requires password confirmation when enabled            0.02s  
+  ✓ security page does not require password confirmation when disabled   0.02s  
+  ✓ security page renders without two factor when feature is disabled    0.02s  
+  ✓ password can be updated                                              0.03s  
+  ✓ correct password must be provided to update password                 0.02s  
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\AuthenticationTest > u…  RouteNotFoundException   
+  Route [login.store] not defined.
+
+  at vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:536
+    532▕             ! is_null($url = call_user_func($this->missingNamedRouteResolver, $name, $parameters, $absolute))) {
+    533▕             return $url;
+    534▕         }
+    535▕ 
+  ➜ 536▕         throw new RouteNotFoundException("Route [{$name}] not defined.");
+    537▕     }
+    538▕ 
+    539▕     /**
+    540▕      * Get the URL for a given route instance.
+
+      [2m+2 vendor frames [22m
+  3   tests/Feature/Auth/AuthenticationTest.php:16
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\AuthenticationTest > users with two factor ena…   
+  Failed asserting that two strings are equal.
+  -'http://justtrip.test/two-factor-challenge'
+  +'http://justtrip.test'
+  
+
+  at tests/Feature/Auth/AuthenticationTest.php:46
+     42▕         'email' => $user->email,
+     43▕         'password' => 'password',
+     44▕     ]);
+     45▕ 
+  ➜  46▕     $response->assertRedirect(route('two-factor.login'));
+     47▕     $response->assertSessionHas('login.id', $user->id);
+     48▕     $this->assertGuest();
+     49▕ });
+     50▕
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\AuthenticationTest > u…  RouteNotFoundException   
+  Route [login.store] not defined.
+
+  at vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:536
+    532▕             ! is_null($url = call_user_func($this->missingNamedRouteResolver, $name, $parameters, $absolute))) {
+    533▕             return $url;
+    534▕         }
+    535▕ 
+  ➜ 536▕         throw new RouteNotFoundException("Route [{$name}] not defined.");
+    537▕     }
+    538▕ 
+    539▕     /**
+    540▕      * Get the URL for a given route instance.
+
+      [2m+2 vendor frames [22m
+  3   tests/Feature/Auth/AuthenticationTest.php:54
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\AuthenticationTest > users can logout             
+  Failed asserting that two strings are equal.
+  -'http://justtrip.test'
+  +'http://justtrip.test/login'
+  
+
+  at tests/Feature/Auth/AuthenticationTest.php:68
+     64▕ 
+     65▕     $response = $this->actingAs($user)->post(route('logout'));
+     66▕ 
+     67▕     $this->assertGuest();
+  ➜  68▕     $response->assertRedirect(route('home'));
+     69▕ });
+     70▕ 
+     71▕ test('users are rate limited', function () {
+     72▕     $user = User::factory()->create();
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\AuthenticationTest > u…  RouteNotFoundException   
+  Route [login.store] not defined.
+
+  at vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:536
+    532▕             ! is_null($url = call_user_func($this->missingNamedRouteResolver, $name, $parameters, $absolute))) {
+    533▕             return $url;
+    534▕         }
+    535▕ 
+  ➜ 536▕         throw new RouteNotFoundException("Route [{$name}] not defined.");
+    537▕     }
+    538▕ 
+    539▕     /**
+    540▕      * Get the URL for a given route instance.
+
+      [2m+2 vendor frames [22m
+  3   tests/Feature/Auth/AuthenticationTest.php:76
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\EmailVerificationTest…   RouteNotFoundException   
+  Route [dashboard] not defined.
+
+  at vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:536
+    532▕             ! is_null($url = call_user_func($this->missingNamedRouteResolver, $name, $parameters, $absolute))) {
+    533▕             return $url;
+    534▕         }
+    535▕ 
+  ➜ 536▕         throw new RouteNotFoundException("Route [{$name}] not defined.");
+    537▕     }
+    538▕ 
+    539▕     /**
+    540▕      * Get the URL for a given route instance.
+
+      [2m+2 vendor frames [22m
+  3   tests/Feature/Auth/EmailVerificationTest.php:36
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\EmailVerificationTest…   RouteNotFoundException   
+  Route [dashboard] not defined.
+
+  at vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:536
+    532▕             ! is_null($url = call_user_func($this->missingNamedRouteResolver, $name, $parameters, $absolute))) {
+    533▕             return $url;
+    534▕         }
+    535▕ 
+  ➜ 536▕         throw new RouteNotFoundException("Route [{$name}] not defined.");
+    537▕     }
+    538▕ 
+    539▕     /**
+    540▕      * Get the URL for a given route instance.
+
+      [2m+2 vendor frames [22m
+  3   tests/Feature/Auth/EmailVerificationTest.php:81
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\EmailVerificationTest…   RouteNotFoundException   
+  Route [dashboard] not defined.
+
+  at vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:536
+    532▕             ! is_null($url = call_user_func($this->missingNamedRouteResolver, $name, $parameters, $absolute))) {
+    533▕             return $url;
+    534▕         }
+    535▕ 
+  ➜ 536▕         throw new RouteNotFoundException("Route [{$name}] not defined.");
+    537▕     }
+    538▕ 
+    539▕     /**
+    540▕      * Get the URL for a given route instance.
+
+      [2m+2 vendor frames [22m
+  3   tests/Feature/Auth/EmailVerificationTest.php:96
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\TwoFactorChallengeTest > two factor challenge…    
+  Expected response status code [200] but received 302.
+Failed asserting that 302 is identical to 200.
+
+  at tests/Feature/Auth/TwoFactorChallengeTest.php:37
+     33▕         'password' => 'password',
+     34▕     ]);
+     35▕ 
+     36▕     $this->get(route('two-factor.login'))
+  ➜  37▕         ->assertOk()
+     38▕         ->assertInertia(fn (Assert $page) => $page
+     39▕             ->component('auth/TwoFactorChallenge'),
+     40▕         );
+     41▕ });
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\VerificationNotificati…  RouteNotFoundException   
+  Route [dashboard] not defined.
+
+  at vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:536
+    532▕             ! is_null($url = call_user_func($this->missingNamedRouteResolver, $name, $parameters, $absolute))) {
+    533▕             return $url;
+    534▕         }
+    535▕ 
+  ➜ 536▕         throw new RouteNotFoundException("Route [{$name}] not defined.");
+    537▕     }
+    538▕ 
+    539▕     /**
+    540▕      * Get the URL for a given route instance.
+
+      [2m+2 vendor frames [22m
+  3   tests/Feature/Auth/VerificationNotificationTest.php:31
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\DashboardTest > guests are…   RouteNotFoundException   
+  Route [dashboard] not defined.
+
+  at vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:536
+    532▕             ! is_null($url = call_user_func($this->missingNamedRouteResolver, $name, $parameters, $absolute))) {
+    533▕             return $url;
+    534▕         }
+    535▕ 
+  ➜ 536▕         throw new RouteNotFoundException("Route [{$name}] not defined.");
+    537▕     }
+    538▕ 
+    539▕     /**
+    540▕      * Get the URL for a given route instance.
+
+      [2m+2 vendor frames [22m
+  3   tests/Feature/DashboardTest.php:6
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\DashboardTest > authenticat…  RouteNotFoundException   
+  Route [dashboard] not defined.
+
+  at vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:536
+    532▕             ! is_null($url = call_user_func($this->missingNamedRouteResolver, $name, $parameters, $absolute))) {
+    533▕             return $url;
+    534▕         }
+    535▕ 
+  ➜ 536▕         throw new RouteNotFoundException("Route [{$name}] not defined.");
+    537▕     }
+    538▕ 
+    539▕     /**
+    540▕      * Get the URL for a given route instance.
+
+      [2m+2 vendor frames [22m
+  3   tests/Feature/DashboardTest.php:14
+
+
+  Tests:    12 failed, 2 skipped, 26 passed (112 assertions)
+  Duration: 3.11s
+

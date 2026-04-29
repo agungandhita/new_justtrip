@@ -22,6 +22,9 @@ Route::prefix('paket-wisata')->name('packages.')->group(function () {
     Route::get('{slug}', [PackageController::class, 'show'])->name('show');
 });
 
+// Open Trip
+Route::get('/open-trip', [\App\Http\Controllers\Frontend\OpenTripController::class, 'index'])->name('open-trip.index');
+
 // Special Offers
 Route::prefix('promo')->name('special-offers.')->group(function () {
     Route::get('/', [SpecialOfferController::class, 'index'])->name('index');
@@ -159,3 +162,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::post('{id}/toggle-active', [Admin\UserController::class, 'toggleActive'])->name('toggle-active');
     });
 });
+
+require __DIR__.'/settings.php';

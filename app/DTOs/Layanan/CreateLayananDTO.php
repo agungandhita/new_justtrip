@@ -4,7 +4,7 @@ namespace App\DTOs\Layanan;
 
 use Illuminate\Http\Request;
 
-readonly class LayananDTO
+readonly class CreateLayananDTO
 {
     public function __construct(
         public string $nama_layanan,

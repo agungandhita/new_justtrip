@@ -1,18 +1,30 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
 import FrontendLayout from '@/layouts/FrontendLayout.vue';
+import { store } from '@/actions/App/Http/Controllers/GuestBookingController';
+
+defineProps<{
+    openTrips: any;
+}>();
 
 const form = useForm({
-    name: '',
+    nama_lengkap: '',
     email: '',
-    phone: '',
-    destination: '',
-    participants: 1,
+    no_hp: '',
+    jenis_layanan: 'open_trip',
+    layanan_id: '',
+    catatan: '',
+    jumlah_peserta: 1,
 });
 
 const submitBooking = () => {
-    alert('Bagus! Pendaftaran simulasi Open Trip berhasil terkirim.');
-    form.reset();
+    form.post(store.url(), {
+        preserveScroll: true,
+        onSuccess: () => {
+            alert('Pendaftaran Open Trip berhasil terkirim! Tim kami akan segera menghubungi Anda.');
+            form.reset();
+        },
+    });
 };
 </script>
 
@@ -75,100 +87,48 @@ const submitBooking = () => {
                 </div>
                 
                 <div class="grid grid-cols-1 gap-10">
-                    <!-- Trip Card 1 -->
-                    <div class="flex flex-col lg:flex-row items-stretch bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-xl shadow-slate-200/40 hover:shadow-2xl hover:border-blue-100 transition-all group">
+                    <div v-if="!openTrips.data.length" class="text-center py-10 text-slate-500">
+                        Belum ada jadwal Open Trip terdekat.
+                    </div>
+                    
+                    <div v-for="trip in openTrips.data" :key="trip.layanan_id" class="flex flex-col lg:flex-row items-stretch bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-xl shadow-slate-200/40 hover:shadow-2xl hover:border-blue-100 transition-all group">
                         <div class="w-full lg:w-[45%] xl:w-[40%] h-72 lg:h-auto overflow-hidden relative">
-                            <img alt="Bali Coastal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyGHdwBeMgpAmH_DC6uqLJxjjq8xKsMwzk045r77y03DfiQanZH2n_mQKpd6uFx9ZMD03Zh43bEuXr7yNuX2xqpjJiT1co4orqycJkaZTM-9AuDhD02cS7Zap5uV_TqlUusOBteo1wwMJ-uNo0192gFdv4_IOauvAMV8ByOFfzxpumQCgW6-EmQ8d4lKKltEYcBeqOyhe96AFgEYP9DVwXybTaUyayvmStO0LGFRChMiP6g89dhKwPgxwBm_fdUM2XzPbYW8PMtTX2"/>
-                            <div class="absolute top-6 left-6">
-                                <span class="px-5 py-2 bg-blue-600/90 backdrop-blur-sm text-white text-sm font-bold rounded-full uppercase tracking-widest shadow-lg">Paling Laris</span>
-                            </div>
+                            <img :alt="trip.nama_layanan" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" :src="trip.gambar_utama || 'https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'"/>
                         </div>
                         <div class="flex-1 p-8 md:p-10 lg:p-14 flex flex-col justify-between">
                             <div>
                                 <div class="flex items-center gap-2 mb-4">
                                     <span class="text-slate-500 font-bold text-sm tracking-wider uppercase flex items-center gap-2">
-                                        <i class="fa-solid fa-location-dot text-red-500 text-lg"></i> Bali, Indonesia
+                                        <i class="fa-solid fa-location-dot text-red-500 text-lg"></i> {{ trip.lokasi_tujuan }}
                                     </span>
                                 </div>
-                                <h3 class="text-3xl md:text-4xl font-black mb-4 group-hover:text-blue-600 transition-colors text-slate-800 tracking-tight">Bali Coastal Adventure</h3>
-                                <p class="text-slate-600 mb-10 leading-relaxed text-lg lg:text-xl">Jelajahi laguna tersembunyi, kuil suci, dan budaya pesisir yang fantastis bersama kawan baru di Pulau Dewata.</p>
+                                <h3 class="text-3xl md:text-4xl font-black mb-4 group-hover:text-blue-600 transition-colors text-slate-800 tracking-tight">{{ trip.nama_layanan }}</h3>
+                                <p class="text-slate-600 mb-10 leading-relaxed text-lg lg:text-xl">{{ trip.deskripsi }}</p>
                                 
                                 <div class="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-8 text-base font-medium bg-slate-50 rounded-2xl p-6 border border-slate-100">
                                     <div class="flex items-center gap-3 text-slate-700">
                                         <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-blue-600"><i class="fa-regular fa-calendar text-lg"></i></div>
-                                        15 Okt - 22 Okt
+                                        {{ trip.durasi_hari }} Hari
                                     </div>
                                     <div class="flex items-center gap-3 text-slate-700">
                                         <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center shadow-sm text-orange-600"><i class="fa-solid fa-chair text-lg"></i></div>
-                                        <span class="text-orange-600 font-bold">Sisa 4 kursi</span>
+                                        <span class="text-orange-600 font-bold">Sisa {{ trip.kuota_tersedia }} kursi</span>
                                     </div>
                                     <div class="flex items-center gap-3 text-slate-700">
                                         <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-green-600"><i class="fa-solid fa-money-bill text-lg"></i></div>
-                                        <span class="font-bold text-lg">Mulai Rp 2.5jt</span>
+                                        <span class="font-bold text-lg">Rp {{ Number(trip.harga_per_orang).toLocaleString('id-ID') }}</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="mt-10 flex flex-col sm:flex-row items-center justify-between border-t border-slate-100 pt-8 gap-6">
                                 <div class="flex items-center w-full sm:w-auto">
-                                    <div class="flex -space-x-3 overflow-hidden mr-4">
-                                        <img alt="Avatar" class="h-12 w-12 rounded-full border-2 border-white shadow-sm" src="https://ui-avatars.com/api/?name=BU&background=random"/>
-                                        <img alt="Avatar" class="h-12 w-12 rounded-full border-2 border-white shadow-sm" src="https://ui-avatars.com/api/?name=DA&background=random"/>
-                                        <img alt="Avatar" class="h-12 w-12 rounded-full border-2 border-white shadow-sm" src="https://ui-avatars.com/api/?name=JO&background=random"/>
-                                    </div>
-                                    <span class="text-slate-500 font-medium">8+ orang tertarik</span>
                                 </div>
-                                <button class="w-full sm:w-auto bg-blue-600 text-white px-10 py-4 rounded-xl font-bold text-lg flex justify-center items-center gap-3 hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-blue-600/30">
-                                    Gabung Sekarang <i class="fa-solid fa-arrow-right"></i>
+                                <button @click="form.layanan_id = trip.layanan_id; document.getElementById('booking-form').scrollIntoView({behavior: 'smooth'})" class="w-full sm:w-auto bg-blue-600 text-white px-10 py-4 rounded-xl font-bold text-lg flex justify-center items-center gap-3 hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-blue-600/30">
+                                    Pilih Trip Ini <i class="fa-solid fa-arrow-right"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Trip Card 2 -->
-                    <div class="flex flex-col lg:flex-row items-stretch bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-xl shadow-slate-200/40 hover:shadow-2xl hover:border-blue-100 transition-all group">
-                        <div class="w-full lg:w-[45%] xl:w-[40%] h-72 lg:h-auto overflow-hidden relative">
-                            <img alt="Paris Lights" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_huU08PQLRmR0WCUYR66v6M4OTUMMN4TgQmpJb0OiGINFfWF8JGojNtV26cAx-r-SQQ8wZHn5j_Z_wVEYRWiUKuTw5ZU3OaK6e1mFZd3tBfRs3txKsREvYKNGfufDP8LgjeJe-z0G9wXeYvbVkBx74Ok4-KLwRP8mmzjeEozuSj1a1q_y-i7_39St2P0tNUAK91MUems_RVCFMiNEI22pnkwFyv7wHeVgfUEX234CgMQXQyk1yM6lo7nP_PeS9L7lKnUHoLR36q58"/>
-                        </div>
-                        <div class="flex-1 p-8 md:p-10 lg:p-14 flex flex-col justify-between">
-                            <div>
-                                <div class="flex items-center gap-2 mb-4">
-                                    <span class="text-slate-500 font-bold text-sm tracking-wider uppercase flex items-center gap-2">
-                                        <i class="fa-solid fa-location-dot text-red-500 text-lg"></i> Paris, Perancis
-                                    </span>
-                                </div>
-                                <h3 class="text-3xl md:text-4xl font-black mb-4 group-hover:text-blue-600 transition-colors text-slate-800 tracking-tight">Parisian Dream Week</h3>
-                                <p class="text-slate-600 mb-10 leading-relaxed text-lg lg:text-xl">Seni, gastronomi, dan keajaiban sungai Seine dalam perpaduan liburan santai yang sangat berkelas bersama komunitas elit.</p>
-                                
-                                <div class="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-8 text-base font-medium bg-slate-50 rounded-2xl p-6 border border-slate-100">
-                                    <div class="flex items-center gap-3 text-slate-700">
-                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-blue-600"><i class="fa-regular fa-calendar text-lg"></i></div>
-                                        05 Nov - 12 Nov
-                                    </div>
-                                    <div class="flex items-center gap-3 text-slate-700">
-                                        <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shadow-sm text-red-600"><i class="fa-solid fa-chair text-lg"></i></div>
-                                        <span class="text-red-600 font-bold">Sisa 2 kursi !!</span>
-                                    </div>
-                                    <div class="flex items-center gap-3 text-slate-700">
-                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-green-600"><i class="fa-solid fa-money-bill text-lg"></i></div>
-                                        <span class="font-bold text-lg">Mulai Rp 18.5jt</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mt-10 flex flex-col sm:flex-row items-center justify-between border-t border-slate-100 pt-8 gap-6">
-                                <div class="flex items-center w-full sm:w-auto">
-                                    <div class="flex -space-x-3 overflow-hidden mr-4">
-                                        <img alt="Avatar" class="h-12 w-12 rounded-full border-2 border-white shadow-sm" src="https://ui-avatars.com/api/?name=IN&background=random"/>
-                                        <img alt="Avatar" class="h-12 w-12 rounded-full border-2 border-white shadow-sm" src="https://ui-avatars.com/api/?name=VI&background=random"/>
-                                    </div>
-                                    <span class="text-slate-500 font-medium">14 orang sudah bergabung</span>
-                                </div>
-                                <button class="w-full sm:w-auto bg-blue-600 text-white px-10 py-4 rounded-xl font-bold text-lg flex justify-center items-center gap-3 hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-blue-600/30">
-                                    Gabung Sekarang <i class="fa-solid fa-arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </section>
 
@@ -184,38 +144,43 @@ const submitBooking = () => {
                         <p class="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Formulir di bawah ini super cepat dan mudah. Isi sisa slot kursi sekarang sebelum kehabisan!</p>
                     </div>
 
-                    <form @submit.prevent="submitBooking" class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 w-full">
+                    <form id="booking-form" @submit.prevent="submitBooking" class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 w-full">
                         <div class="col-span-1 md:col-span-2">
                             <label class="block text-sm font-bold mb-2 text-slate-700">Nama Lengkap Sesuai KTP</label>
-                            <input v-model="form.name" class="w-full px-6 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium" placeholder="Contoh: Budi Santoso" type="text" required/>
+                            <input v-model="form.nama_lengkap" class="w-full px-6 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium" placeholder="Contoh: Budi Santoso" type="text" required/>
+                            <div v-if="form.errors.nama_lengkap" class="text-red-500 text-sm mt-1">{{ form.errors.nama_lengkap }}</div>
                         </div>
                         
                         <div class="col-span-1">
                             <label class="block text-sm font-bold mb-2 text-slate-700">Alamat Email Lengkap</label>
                             <input v-model="form.email" class="w-full px-6 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium" placeholder="budi@example.com" type="email" required/>
+                            <div v-if="form.errors.email" class="text-red-500 text-sm mt-1">{{ form.errors.email }}</div>
                         </div>
                         
                         <div class="col-span-1">
                             <label class="block text-sm font-bold mb-2 text-slate-700">Nomor WhatsApp Aktif</label>
-                            <input v-model="form.phone" class="w-full px-6 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium" placeholder="0812xxxxxx" type="tel" required/>
+                            <input v-model="form.no_hp" class="w-full px-6 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium" placeholder="0812xxxxxx" type="tel" required/>
+                            <div v-if="form.errors.no_hp" class="text-red-500 text-sm mt-1">{{ form.errors.no_hp }}</div>
                         </div>
                         
                         <div class="col-span-1">
                             <label class="block text-sm font-bold mb-2 text-slate-700">Trip Incaranmu</label>
                             <div class="relative">
-                                <select v-model="form.destination" class="w-full px-6 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white outline-none transition-all appearance-none cursor-pointer font-medium" required>
+                                <select v-model="form.layanan_id" class="w-full px-6 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white outline-none transition-all appearance-none cursor-pointer font-medium" required>
                                     <option disabled value="">Pilih destinasi...</option>
-                                    <option value="bali">Bali Coastal - Mulai 2.5jt</option>
-                                    <option value="paris">Paris Week - Mulai 18.5jt</option>
-                                    <option value="iceland">Iceland Aurora - Mulai 24jt</option>
+                                    <option v-for="trip in openTrips.data" :key="trip.layanan_id" :value="trip.layanan_id">
+                                        {{ trip.nama_layanan }} - Mulai Rp {{ Number(trip.harga_per_orang).toLocaleString('id-ID') }}
+                                    </option>
                                 </select>
                                 <i class="fa-solid fa-chevron-down absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
                             </div>
+                            <div v-if="form.errors.layanan_id" class="text-red-500 text-sm mt-1">{{ form.errors.layanan_id }}</div>
                         </div>
                         
                         <div class="col-span-1">
                             <label class="block text-sm font-bold mb-2 text-slate-700">Mau Daftar Berapa Orang?</label>
-                            <input v-model="form.participants" class="w-full px-6 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium" min="1" type="number" required/>
+                            <input v-model="form.jumlah_peserta" class="w-full px-6 py-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium" min="1" type="number" required/>
+                            <div v-if="form.errors.jumlah_peserta" class="text-red-500 text-sm mt-1">{{ form.errors.jumlah_peserta }}</div>
                         </div>
                         
                         <div class="col-span-1 md:col-span-2 mt-6">

@@ -19,7 +19,6 @@ class Layanan extends Model
     use HasFactory, HasUuids, SoftDeletes;
 
     protected $table = 'layanan';
-    protected $primaryKey = 'layanan_id';
 
     protected $fillable = [
         'nama_layanan',
@@ -74,12 +73,12 @@ class Layanan extends Model
 
     public function bookings(): HasMany
     {
-        return $this->hasMany(Booking::class, 'layanan_id', 'layanan_id');
+        return $this->hasMany(Booking::class);
     }
 
     public function specialOffers(): HasMany
     {
-        return $this->hasMany(SpecialOffer::class, 'layanan_id', 'layanan_id');
+        return $this->hasMany(SpecialOffer::class);
     }
 
     // ── Scopes ───────────────────────────────────────────────────────────────

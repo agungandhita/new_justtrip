@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\DTOs\Layanan\LayananDTO;
+use App\DTOs\Layanan\CreateLayananDTO;
+use App\DTOs\Layanan\UpdateLayananDTO;
 use App\Http\Controllers\Concerns\HasPaginationResource;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\LayananRequest;
+use App\Http\Requests\Admin\StoreLayananRequest;
+use App\Http\Requests\Admin\UpdateLayananRequest;
 use App\Services\Layanan\LayananInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,9 +34,9 @@ class LayananController extends Controller
         return Inertia::render('Admin/Layanan/Create');
     }
 
-    public function store(LayananRequest $request): RedirectResponse
+    public function store(StoreLayananRequest $request): RedirectResponse
     {
-        $dto = LayananDTO::fromRequest($request);
+        $dto = CreateLayananDTO::fromRequest($request);
 
         $this->layananService->create($dto);
 
@@ -48,9 +50,9 @@ class LayananController extends Controller
         return Inertia::render('Admin/Layanan/Edit', compact('layanan'));
     }
 
-    public function update(LayananRequest $request, string $id): RedirectResponse
+    public function update(UpdateLayananRequest $request, string $id): RedirectResponse
     {
-        $dto = LayananDTO::fromRequest($request);
+        $dto = UpdateLayananDTO::fromRequest($request);
 
         $this->layananService->update($id, $dto);
 

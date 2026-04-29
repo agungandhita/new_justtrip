@@ -2,6 +2,7 @@ import { wayfinder } from '@laravel/vite-plugin-wayfinder';
 import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
+import AutoImport from 'unplugin-auto-import/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -22,6 +23,15 @@ export default defineConfig({
         }),
         wayfinder({
             formVariants: true,
+        }),
+        AutoImport({
+            imports: [
+                'vue',
+                {
+                    '@inertiajs/vue3': ['useForm', 'usePage', 'router']
+                }
+            ],
+            dts: false,
         }),
     ],
 });

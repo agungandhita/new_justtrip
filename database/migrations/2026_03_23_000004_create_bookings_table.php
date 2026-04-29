@@ -9,10 +9,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bookings', function (Blueprint $table) {
-            $table->uuid('booking_id')->primary();
+            $table->uuid('id')->primary();
             $table->string('booking_number')->unique();
             $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignUuid('layanan_id')->constrained('layanan', 'layanan_id');
+            $table->foreignUuid('layanan_id')->constrained('layanan')->cascadeOnDelete();
             $table->foreignUuid('special_offer_id')->nullable()->constrained('special_offers', 'id')->nullOnDelete();
             $table->string('status')->default('pending');
             $table->unsignedInteger('jumlah_peserta');

@@ -2,7 +2,8 @@
 
 namespace App\Services\Layanan;
 
-use App\DTOs\Layanan\LayananDTO;
+use App\DTOs\Layanan\CreateLayananDTO;
+use App\DTOs\Layanan\UpdateLayananDTO;
 use App\Enums\LayananStatus;
 use App\Models\Trip\Layanan;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -46,7 +47,7 @@ class LayananService implements LayananInterface
         return Layanan::aktif()->orderBy('nama_layanan')->get();
     }
 
-    public function create(LayananDTO $dto): Layanan
+    public function create(CreateLayananDTO $dto): Layanan
     {
         $data = $this->prepareDataFromDTO($dto);
 
@@ -69,7 +70,7 @@ class LayananService implements LayananInterface
         return Layanan::create($data);
     }
 
-    public function update(string $id, LayananDTO $dto): Layanan
+    public function update(string $id, UpdateLayananDTO $dto): Layanan
     {
         $layanan = $this->findById($id);
         $data = $this->prepareDataFromDTO($dto);
@@ -98,7 +99,7 @@ class LayananService implements LayananInterface
         return $layanan->fresh();
     }
 
-    private function prepareDataFromDTO(LayananDTO $dto): array
+    private function prepareDataFromDTO(CreateLayananDTO|UpdateLayananDTO $dto): array
     {
         return [
             'nama_layanan'      => $dto->nama_layanan,

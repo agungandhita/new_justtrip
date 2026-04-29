@@ -13,7 +13,7 @@ class GuestBooking extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $primaryKey = 'guest_booking_id';
+    // protected $primaryKey = 'id';
 
     protected $fillable = [
         'booking_number',
@@ -48,7 +48,7 @@ class GuestBooking extends Model
 
     public function layanan(): BelongsTo
     {
-        return $this->belongsTo(Layanan::class, 'layanan_id', 'layanan_id');
+        return $this->belongsTo(Layanan::class);
     }
 
     // ── Scopes ───────────────────────────────────────────────────────────────
