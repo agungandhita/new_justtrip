@@ -26,6 +26,11 @@ const submitBooking = () => {
         },
     });
 };
+
+const selectTrip = (layananId: string) => {
+    form.layanan_id = layananId;
+    document.getElementById('booking-form')?.scrollIntoView({ behavior: 'smooth' });
+};
 </script>
 
 <template>
@@ -123,7 +128,7 @@ const submitBooking = () => {
                             <div class="mt-10 flex flex-col sm:flex-row items-center justify-between border-t border-slate-100 pt-8 gap-6">
                                 <div class="flex items-center w-full sm:w-auto">
                                 </div>
-                                <button @click="form.layanan_id = trip.layanan_id; document.getElementById('booking-form').scrollIntoView({behavior: 'smooth'})" class="w-full sm:w-auto bg-blue-600 text-white px-10 py-4 rounded-xl font-bold text-lg flex justify-center items-center gap-3 hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-blue-600/30">
+                                <button @click="selectTrip(trip.layanan_id)" class="w-full sm:w-auto bg-blue-600 text-white px-10 py-4 rounded-xl font-bold text-lg flex justify-center items-center gap-3 hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-blue-600/30">
                                     Pilih Trip Ini <i class="fa-solid fa-arrow-right"></i>
                                 </button>
                             </div>

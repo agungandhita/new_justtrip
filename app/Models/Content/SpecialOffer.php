@@ -2,6 +2,7 @@
 
 namespace App\Models\Content;
 
+use Database\Factories\Content\SpecialOfferFactory;
 use App\Models\Trip\Layanan;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,6 +13,11 @@ use Illuminate\Support\Str;
 class SpecialOffer extends Model
 {
     use HasFactory, HasUuids;
+
+    protected static function newFactory(): SpecialOfferFactory
+    {
+        return SpecialOfferFactory::new();
+    }
 
     protected $fillable = [
         'layanan_id',

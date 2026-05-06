@@ -64,12 +64,22 @@ class NewsService implements NewsInterface
 
     public function create(array $data): News
     {
+        if (! empty($data['is_published']) && empty($data['published_at'])) {
+            $data['published_at'] = now();
+        }
+
         return News::create($data);
     }
 
     public function update(string $id, array $data): News
     {
         $news = $this->findById($id);
+
+        // Set published_at only when first time publishing
+        if (! empty($data['is_published']) && ! $news->published_at) {
+            $data['published_at'] = now();
+        }
+
         $news->update($data);
 
         return $news->fresh();

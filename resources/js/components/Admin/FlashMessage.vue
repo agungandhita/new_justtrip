@@ -40,17 +40,17 @@ watch(
     >
         <div
             v-if="visible"
-            class="mx-6 mt-4 flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium shadow-sm"
+            class="mx-6 mt-4 flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium border"
             :class="
                 type === 'success'
-                    ? 'bg-green-50 text-green-800 border border-green-200'
-                    : 'bg-red-50 text-red-800 border border-red-200'
+                    ? 'bg-green-50 text-green-800 border-green-200'
+                    : 'bg-destructive/10 text-destructive border-destructive/20'
             "
         >
-            <CheckCircle v-if="type === 'success'" class="w-5 h-5 text-green-500 flex-shrink-0" />
-            <XCircle v-else class="w-5 h-5 text-red-500 flex-shrink-0" />
+            <CheckCircle v-if="type === 'success'" class="w-4 h-4 text-green-500 flex-shrink-0" />
+            <XCircle v-else class="w-4 h-4 text-destructive flex-shrink-0" />
             <span class="flex-1">{{ message }}</span>
-            <button @click="visible = false" class="text-current opacity-60 hover:opacity-100">
+            <button @click="visible = false" class="text-current opacity-60 hover:opacity-100 transition-opacity">
                 <X class="w-4 h-4" />
             </button>
         </div>

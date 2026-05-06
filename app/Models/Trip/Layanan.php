@@ -7,6 +7,7 @@ use App\Enums\LayananStatus;
 use App\Enums\WilayahLayanan;
 use App\Models\Booking\Booking;
 use App\Models\Content\SpecialOffer;
+use Database\Factories\Trip\LayananFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,11 @@ use Illuminate\Support\Str;
 class Layanan extends Model
 {
     use HasFactory, HasUuids, SoftDeletes;
+
+    protected static function newFactory(): LayananFactory
+    {
+        return LayananFactory::new();
+    }
 
     protected $table = 'layanan';
 

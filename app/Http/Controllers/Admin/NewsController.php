@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Concerns\HasPaginationResource;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreNewsRequest;
+use App\Http\Requests\Admin\UpdateNewsRequest;
 use App\Services\News\NewsInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,6 +15,7 @@ use Inertia\Response;
 class NewsController extends Controller
 {
     use HasPaginationResource;
+
     public function __construct(private NewsInterface $newsService) {}
 
     public function index(Request $request): Response
@@ -30,22 +33,9 @@ class NewsController extends Controller
         return Inertia::render('Admin/News/Create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreNewsRequest $request): RedirectResponse
     {
-        $request->validate([
-            'judul'        => ['required', 'string', 'max:255'],
-            'konten'       => ['required', 'string'],
-            'ringkasan'    => ['nullable', 'string', 'max:500'],
-            'kategori'     => ['nullable', 'string', 'max:100'],
-            'is_published' => ['boolean'],
-        ]);
-
-        $data = $request->except(['_token']);
-        if ($data['is_published'] ?? false) {
-            $data['published_at'] = now();
-        }
-
-        $this->newsService->create($data);
+        $this->newsService->create($request->validated());
 
         return redirect()->route('admin.news.index')->with('success', 'Artikel berhasil ditambahkan.');
     }
@@ -57,19 +47,9 @@ class NewsController extends Controller
         return Inertia::render('Admin/News/Edit', compact('news'));
     }
 
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(UpdateNewsRequest $request, string $id): RedirectResponse
     {
-        $request->validate([
-            'judul'    => ['required', 'string', 'max:255'],
-            'konten'   => ['required', 'string'],
-        ]);
-
-        $data = $request->except(['_token', '_method']);
-        if (($data['is_published'] ?? false) && ! $this->newsService->findById($id)->published_at) {
-            $data['published_at'] = now();
-        }
-
-        $this->newsService->update($id, $data);
+        $this->newsService->update($id, $request->validated());
 
         return redirect()->route('admin.news.index')->with('success', 'Artikel berhasil diperbarui.');
     }

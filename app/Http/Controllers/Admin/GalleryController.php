@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Concerns\HasPaginationResource;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreGalleryRequest;
+use App\Http\Requests\Admin\UpdateGalleryRequest;
 use App\Services\Gallery\GalleryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,6 +15,7 @@ use Inertia\Response;
 class GalleryController extends Controller
 {
     use HasPaginationResource;
+
     public function __construct(private GalleryInterface $galleryService) {}
 
     public function index(Request $request): Response
@@ -30,18 +33,9 @@ class GalleryController extends Controller
         return Inertia::render('Admin/Galleries/Create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreGalleryRequest $request): RedirectResponse
     {
-        $request->validate([
-            'judul'         => ['required', 'string', 'max:255'],
-            'lokasi_tujuan' => ['required', 'string', 'max:255'],
-            'deskripsi'     => ['nullable', 'string'],
-            'tanggal_trip'  => ['nullable', 'date'],
-            'kategori'      => ['nullable', 'string', 'max:100'],
-            'is_active'     => ['boolean'],
-        ]);
-
-        $this->galleryService->create($request->except(['_token']));
+        $this->galleryService->create($request->validated());
 
         return redirect()->route('admin.galleries.index')->with('success', 'Galeri berhasil ditambahkan.');
     }
@@ -53,14 +47,9 @@ class GalleryController extends Controller
         return Inertia::render('Admin/Galleries/Edit', compact('gallery'));
     }
 
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(UpdateGalleryRequest $request, string $id): RedirectResponse
     {
-        $request->validate([
-            'judul'         => ['required', 'string', 'max:255'],
-            'lokasi_tujuan' => ['required', 'string', 'max:255'],
-        ]);
-
-        $this->galleryService->update($id, $request->except(['_token', '_method']));
+        $this->galleryService->update($id, $request->validated());
 
         return redirect()->route('admin.galleries.index')->with('success', 'Galeri berhasil diperbarui.');
     }

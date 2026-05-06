@@ -11,10 +11,14 @@ import {
     Star,
     Users,
     LogOut,
-    ChevronRight,
     Globe,
+    ChevronLeft,
+    ChevronRight,
 } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import type { PageProps } from '@/types'
 
 interface NavGroup {
@@ -26,8 +30,6 @@ interface NavItem {
     label: string
     href: string
     icon?: any
-    badge?: number
-    children?: NavItem[]
 }
 
 const page = usePage<PageProps>()
@@ -73,7 +75,7 @@ const navGroups: NavGroup[] = [
     },
 ]
 
-const sidebarOpen = ref(true)
+const collapsed = ref(false)
 
 function logout() {
     router.post('/logout')
@@ -82,66 +84,92 @@ function logout() {
 
 <template>
     <aside
-        class="flex flex-col h-screen bg-slate-900 text-slate-100 transition-all duration-300"
-        :class="sidebarOpen ? 'w-64' : 'w-16'"
+        class="relative flex flex-col h-screen bg-white border-r border-border transition-all duration-300 shrink-0"
+        :class="collapsed ? 'w-[60px]' : 'w-64'"
     >
+        <!-- Toggle collapse button -->
+        <button
+            @click="collapsed = !collapsed"
+            class="absolute -right-3 top-6 z-10 w-6 h-6 bg-background border border-border rounded-full flex items-center justify-center shadow-sm hover:bg-accent transition-colors"
+        >
+            <ChevronLeft v-if="!collapsed" class="w-3.5 h-3.5 text-muted-foreground" />
+            <ChevronRight v-else class="w-3.5 h-3.5 text-muted-foreground" />
+        </button>
+
         <!-- Logo -->
-        <div class="flex items-center gap-3 px-4 py-5 border-b border-slate-800">
-            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Globe class="w-5 h-5 text-white" />
+        <div class="flex items-center gap-3 px-4 h-16 border-b border-border shrink-0 overflow-hidden">
+            <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+                <Globe class="w-4 h-4 text-primary-foreground" />
             </div>
-            <span v-if="sidebarOpen" class="font-bold text-lg text-white leading-none">
-                JustTrip<br />
-                <span class="text-xs font-normal text-slate-400">Admin Panel</span>
-            </span>
+            <div v-if="!collapsed" class="flex flex-col leading-tight overflow-hidden">
+                <span class="font-bold text-sm text-foreground truncate">JustTrip</span>
+                <span class="text-xs text-muted-foreground truncate">Admin Panel</span>
+            </div>
         </div>
 
         <!-- Nav -->
-        <nav class="flex-1 overflow-y-auto py-4 px-2 space-y-1">
-            <div v-for="group in navGroups" :key="group.label" class="mb-4">
-                <p
-                    v-if="sidebarOpen"
-                    class="px-3 mb-1 text-xs font-semibold text-slate-500 uppercase tracking-wider"
-                >
-                    {{ group.label }}
-                </p>
-                <div v-else class="border-t border-slate-800 mb-2" />
+        <nav class="flex-1 overflow-y-auto py-3 px-2">
+            <TooltipProvider :delay-duration="0">
+                <div v-for="group in navGroups" :key="group.label" class="mb-4">
+                    <p
+                        v-if="!collapsed"
+                        class="px-3 mb-1 text-[10px] font-semibold text-muted-foreground uppercase tracking-widest"
+                    >
+                        {{ group.label }}
+                    </p>
+                    <Separator v-else class="mb-2 mx-2" />
 
-                <Link
-                    v-for="item in group.items"
-                    :key="item.href"
-                    :href="item.href"
-                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150"
-                    :class="
-                        isActive(item.href)
-                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25'
-                            : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                    "
-                >
-                    <component :is="item.icon" class="w-5 h-5 flex-shrink-0" />
-                    <span v-if="sidebarOpen" class="truncate">{{ item.label }}</span>
-                </Link>
-            </div>
+                    <Tooltip v-for="item in group.items" :key="item.href">
+                        <TooltipTrigger as-child>
+                            <Link
+                                :href="item.href"
+                                class="flex items-center gap-3 px-3 py-2 mb-0.5 rounded-md text-sm font-medium transition-all duration-150"
+                                :class="
+                                    isActive(item.href)
+                                        ? 'bg-primary text-primary-foreground shadow-sm'
+                                        : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                                "
+                            >
+                                <component :is="item.icon" class="w-4 h-4 flex-shrink-0" />
+                                <span v-if="!collapsed" class="truncate">{{ item.label }}</span>
+                            </Link>
+                        </TooltipTrigger>
+                        <TooltipContent v-if="collapsed" side="right">
+                            {{ item.label }}
+                        </TooltipContent>
+                    </Tooltip>
+                </div>
+            </TooltipProvider>
         </nav>
 
         <!-- User + Logout -->
-        <div class="border-t border-slate-800 p-3 space-y-1">
-            <div v-if="sidebarOpen" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-slate-800">
-                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+        <div class="border-t border-border p-3 space-y-1 shrink-0">
+            <div v-if="!collapsed" class="flex items-center gap-3 px-3 py-2 rounded-md bg-muted/50 mb-1 overflow-hidden">
+                <div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold flex-shrink-0">
                     {{ user?.name?.charAt(0)?.toUpperCase() }}
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-white truncate">{{ user?.name }}</p>
-                    <p class="text-xs text-slate-400 truncate">{{ user?.email }}</p>
+                    <p class="text-xs font-semibold text-foreground truncate">{{ user?.name }}</p>
+                    <p class="text-[10px] text-muted-foreground truncate">{{ user?.email }}</p>
                 </div>
             </div>
-            <button
-                @click="logout"
-                class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-red-400 hover:bg-slate-800 transition-colors"
-            >
-                <LogOut class="w-5 h-5 flex-shrink-0" />
-                <span v-if="sidebarOpen">Keluar</span>
-            </button>
+            <TooltipProvider :delay-duration="0">
+                <Tooltip>
+                    <TooltipTrigger as-child>
+                        <Button
+                            @click="logout"
+                            variant="ghost"
+                            class="w-full justify-start gap-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10 px-3"
+                            :class="collapsed ? 'px-0 justify-center' : ''"
+                            size="sm"
+                        >
+                            <LogOut class="w-4 h-4 flex-shrink-0" />
+                            <span v-if="!collapsed">Keluar</span>
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent v-if="collapsed" side="right">Keluar</TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
         </div>
     </aside>
 </template>

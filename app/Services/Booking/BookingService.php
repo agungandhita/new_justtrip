@@ -113,8 +113,11 @@ class BookingService implements BookingInterface
 
     public function cancelBooking(string $bookingId, string $userId): void
     {
-        $booking = $this->getBookingDetail($bookingId, $userId);
+        // Try admin lookup first (no user_id filter), fallback to user-scoped lookup
+        $booking = Booking::find($bookingId)
+            ?? $this->getBookingDetail($bookingId, $userId);
 
+        abort_if($booking === null, 404, 'Booking tidak ditemukan.');
         abort_if($booking->status !== BookingStatus::Pending, 422, 'Hanya booking dengan status pending yang bisa dibatalkan.');
 
         $booking->update([
@@ -162,8 +165,8 @@ class BookingService implements BookingInterface
         return Booking::with(['layanan', 'user'])
             ->when(
                 isset($filters['search']) && $filters['search'],
-                fn ($q) => $q->where('booking_number', 'like', "%{$filters['search']}%")
-                    ->orWhereJsonContains('customer_info->name', $filters['search'])
+                fn ($q) => $q->whereLike('booking_number', $filters['search'])
+                    ->orWhereLike('customer_info->name', $filters['search'])
             )
             ->when(
                 isset($filters['status']) && $filters['status'],

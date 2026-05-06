@@ -6,6 +6,7 @@ use App\Enums\BookingStatus;
 use App\Models\Content\SpecialOffer;
 use App\Models\Trip\Layanan;
 use App\Models\User;
+use Database\Factories\Booking\BookingFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Booking extends Model
 {
     use HasFactory, HasUuids;
+
+    protected static function newFactory(): BookingFactory
+    {
+        return BookingFactory::new();
+    }
 
     // protected $primaryKey = 'id';
 

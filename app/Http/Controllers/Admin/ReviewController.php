@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Concerns\HasPaginationResource;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreReviewRequest;
+use App\Http\Requests\Admin\UpdateReviewRequest;
 use App\Services\Review\ReviewInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,15 +15,16 @@ use Inertia\Response;
 class ReviewController extends Controller
 {
     use HasPaginationResource;
+
     public function __construct(private ReviewInterface $reviewService) {}
 
     public function index(Request $request): Response
     {
-        $reviews = $this->reviewService->getAll($request->only(['search']));
+        $reviews = $this->reviewService->getAll($request->only(['search', 'is_active']));
 
         return Inertia::render('Admin/Reviews/Index', [
             'reviews' => $this->paginateToResource($reviews),
-            'filters' => $request->only(['search']),
+            'filters' => $request->only(['search', 'is_active']),
         ]);
     }
 
@@ -30,18 +33,9 @@ class ReviewController extends Controller
         return Inertia::render('Admin/Reviews/Create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreReviewRequest $request): RedirectResponse
     {
-        $request->validate([
-            'nama_reviewer' => ['required', 'string', 'max:255'],
-            'rating'        => ['required', 'integer', 'min:1', 'max:5'],
-            'komentar'      => ['required', 'string'],
-            'destinasi'     => ['nullable', 'string', 'max:255'],
-            'is_active'     => ['boolean'],
-            'order_column'  => ['nullable', 'integer'],
-        ]);
-
-        $this->reviewService->create($request->all());
+        $this->reviewService->create($request->validated());
 
         return redirect()->route('admin.reviews.index')->with('success', 'Review berhasil ditambahkan.');
     }
@@ -53,15 +47,9 @@ class ReviewController extends Controller
         return Inertia::render('Admin/Reviews/Edit', compact('review'));
     }
 
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(UpdateReviewRequest $request, string $id): RedirectResponse
     {
-        $request->validate([
-            'nama_reviewer' => ['required', 'string', 'max:255'],
-            'rating'        => ['required', 'integer', 'min:1', 'max:5'],
-            'komentar'      => ['required', 'string'],
-        ]);
-
-        $this->reviewService->update($id, $request->all());
+        $this->reviewService->update($id, $request->validated());
 
         return redirect()->route('admin.reviews.index')->with('success', 'Review berhasil diperbarui.');
     }

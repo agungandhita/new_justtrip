@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Concerns\HasPaginationResource;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Services\User\UserInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,6 +15,7 @@ use Inertia\Response;
 class UserController extends Controller
 {
     use HasPaginationResource;
+
     public function __construct(private UserInterface $userService) {}
 
     public function index(Request $request): Response
@@ -30,18 +33,9 @@ class UserController extends Controller
         return Inertia::render('Admin/Users/Create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreUserRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'unique:users,email'],
-            'role'     => ['required', 'in:admin,user'],
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
-            'phone'    => ['nullable', 'string', 'max:20'],
-            'address'  => ['nullable', 'string'],
-        ]);
-
-        $this->userService->create($request->all());
+        $this->userService->create($request->validated());
 
         return redirect()->route('admin.users.index')->with('success', 'User berhasil ditambahkan.');
     }
@@ -53,15 +47,9 @@ class UserController extends Controller
         return Inertia::render('Admin/Users/Edit', compact('user'));
     }
 
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(UpdateUserRequest $request, string $id): RedirectResponse
     {
-        $request->validate([
-            'name'  => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:users,email,' . $id],
-            'role'  => ['required', 'in:admin,user'],
-        ]);
-
-        $this->userService->update($id, $request->except(['_token', '_method', 'password_confirmation']));
+        $this->userService->update($id, $request->validated());
 
         return redirect()->route('admin.users.index')->with('success', 'User berhasil diperbarui.');
     }

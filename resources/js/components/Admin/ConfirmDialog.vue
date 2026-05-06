@@ -1,6 +1,15 @@
 <script setup lang="ts">
+import { AlertTriangle } from 'lucide-vue-next'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 import { ref } from 'vue'
-import { AlertTriangle, X } from 'lucide-vue-next'
 
 const props = defineProps<{
     title?: string
@@ -12,70 +21,43 @@ const emit = defineEmits<{
     cancel: []
 }>()
 
-const visible = ref(false)
+const open = ref(false)
 
-function open() {
-    visible.value = true
+function openDialog() {
+    open.value = true
 }
 
 function confirm() {
-    visible.value = false
+    open.value = false
     emit('confirm')
 }
 
 function cancel() {
-    visible.value = false
+    open.value = false
     emit('cancel')
 }
 
-defineExpose({ open })
+defineExpose({ open: openDialog })
 </script>
 
 <template>
-    <Teleport to="body">
-        <Transition
-            enter-active-class="transition-opacity duration-200"
-            enter-from-class="opacity-0"
-            enter-to-class="opacity-100"
-            leave-active-class="transition-opacity duration-150"
-            leave-from-class="opacity-100"
-            leave-to-class="opacity-0"
-        >
-            <div
-                v-if="visible"
-                class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
-                @click.self="cancel"
-            >
-                <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-sm p-6">
-                    <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                            <AlertTriangle class="w-5 h-5 text-red-600" />
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="text-base font-semibold text-slate-900 dark:text-white">
-                                {{ title ?? 'Konfirmasi Hapus' }}
-                            </h3>
-                            <p class="text-sm text-slate-500 mt-1">
-                                {{ message ?? 'Apakah Anda yakin ingin menghapus item ini? Tindakan ini tidak bisa dibatalkan.' }}
-                            </p>
-                        </div>
+    <Dialog v-model:open="open">
+        <DialogContent class="sm:max-w-md">
+            <DialogHeader>
+                <div class="flex items-center gap-3 mb-1">
+                    <div class="w-9 h-9 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
+                        <AlertTriangle class="w-4 h-4 text-destructive" />
                     </div>
-                    <div class="flex gap-3 mt-6 justify-end">
-                        <button
-                            @click="cancel"
-                            class="px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
-                        >
-                            Batal
-                        </button>
-                        <button
-                            @click="confirm"
-                            class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
-                        >
-                            Hapus
-                        </button>
-                    </div>
+                    <DialogTitle>{{ title ?? 'Konfirmasi Hapus' }}</DialogTitle>
                 </div>
-            </div>
-        </Transition>
-    </Teleport>
+                <DialogDescription>
+                    {{ message ?? 'Apakah Anda yakin ingin menghapus item ini? Tindakan ini tidak bisa dibatalkan.' }}
+                </DialogDescription>
+            </DialogHeader>
+            <DialogFooter class="gap-2">
+                <Button variant="outline" @click="cancel">Batal</Button>
+                <Button variant="destructive" @click="confirm">Hapus</Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
 </template>

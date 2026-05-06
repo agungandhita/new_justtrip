@@ -3,6 +3,13 @@ import { useForm } from '@inertiajs/vue3'
 import { ArrowLeft } from 'lucide-vue-next'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import PageHeader from '@/components/Admin/PageHeader.vue'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Separator } from '@/components/ui/separator'
 
 const form = useForm({
     judul: '',
@@ -13,57 +20,64 @@ const form = useForm({
     gambar_utama: '',
 })
 
-function submit() {
-    form.post('/admin/news')
-}
+function submit() { form.post('/admin/news') }
 </script>
 
 <template>
     <AdminLayout>
-        <template #header><span class="text-sm text-slate-500">Tulis Artikel</span></template>
-        <PageHeader title="Tulis Artikel" :breadcrumbs="[{ label: 'Artikel', href: '/admin/news' }, { label: 'Tulis' }]">
-            <a href="/admin/news" class="flex items-center gap-2 text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg">
-                <ArrowLeft class="w-4 h-4" /> Kembali
-            </a>
+        <template #header><span class="text-sm font-medium text-muted-foreground">Tulis Artikel</span></template>
+
+        <PageHeader title="Tulis Artikel" :breadcrumbs="[{ label: 'Artikel', href: '/admin/news' }, { label: 'Buat' }]">
+            <Button variant="outline" size="sm" as-child class="gap-2">
+                <a href="/admin/news"><ArrowLeft class="w-4 h-4" /> Kembali</a>
+            </Button>
         </PageHeader>
 
-        <form @submit.prevent="submit" class="space-y-6 max-w-3xl">
-            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 space-y-4">
-                <h3 class="text-base font-semibold text-slate-900 pb-3 border-b border-slate-100">Informasi Artikel</h3>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Judul <span class="text-red-500">*</span></label>
-                    <input v-model="form.judul" type="text" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/30" :class="form.errors.judul ? 'border-red-400' : ''" />
-                    <p v-if="form.errors.judul" class="text-xs text-red-500 mt-1">{{ form.errors.judul }}</p>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Kategori</label>
-                        <input v-model="form.kategori" type="text" placeholder="e.g. Travel Tips" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none" />
+        <form @submit.prevent="submit" class="max-w-3xl space-y-5">
+            <Card>
+                <CardHeader class="pb-3">
+                    <CardTitle class="text-base">Informasi Artikel</CardTitle>
+                </CardHeader>
+                <Separator />
+                <CardContent class="pt-5 space-y-4">
+                    <div class="space-y-1.5">
+                        <Label>Judul <span class="text-destructive">*</span></Label>
+                        <Input v-model="form.judul" placeholder="Judul artikel..." :class="form.errors.judul ? 'border-destructive' : ''" />
+                        <p v-if="form.errors.judul" class="text-xs text-destructive">{{ form.errors.judul }}</p>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">URL Gambar Utama</label>
-                        <input v-model="form.gambar_utama" type="text" placeholder="https://..." class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none" />
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <Label>Kategori</Label>
+                            <Input v-model="form.kategori" placeholder="e.g. Travel Tips" />
+                        </div>
+                        <div class="space-y-1.5">
+                            <Label>URL Gambar Utama</Label>
+                            <Input v-model="form.gambar_utama" placeholder="https://..." />
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Ringkasan</label>
-                    <textarea v-model="form.ringkasan" rows="2" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none" />
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Konten <span class="text-red-500">*</span></label>
-                    <textarea v-model="form.konten" rows="12" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none font-mono" :class="form.errors.konten ? 'border-red-400' : ''" />
-                    <p v-if="form.errors.konten" class="text-xs text-red-500 mt-1">{{ form.errors.konten }}</p>
-                </div>
-                <label class="flex items-center gap-2 cursor-pointer">
-                    <input v-model="form.is_published" type="checkbox" class="rounded" />
-                    <span class="text-sm text-slate-700">Langsung terbitkan</span>
-                </label>
-            </div>
+                    <div class="space-y-1.5">
+                        <Label>Ringkasan</Label>
+                        <Textarea v-model="form.ringkasan" rows="2" placeholder="Ringkasan singkat artikel..." />
+                    </div>
+                    <div class="space-y-1.5">
+                        <Label>Konten <span class="text-destructive">*</span></Label>
+                        <Textarea v-model="form.konten" rows="14" placeholder="Tulis konten artikel di sini..." class="font-mono text-sm" :class="form.errors.konten ? 'border-destructive' : ''" />
+                        <p v-if="form.errors.konten" class="text-xs text-destructive">{{ form.errors.konten }}</p>
+                    </div>
+                    <div class="flex items-center gap-2 pt-1">
+                        <Checkbox id="is_published" v-model:checked="form.is_published" />
+                        <Label for="is_published" class="cursor-pointer font-normal">Langsung terbitkan artikel</Label>
+                    </div>
+                </CardContent>
+            </Card>
+
             <div class="flex items-center gap-3">
-                <button type="submit" :disabled="form.processing" class="px-6 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg disabled:opacity-50">
+                <Button type="submit" :disabled="form.processing">
                     {{ form.processing ? 'Menyimpan...' : (form.is_published ? 'Terbitkan' : 'Simpan Draft') }}
-                </button>
-                <a href="/admin/news" class="px-6 py-2.5 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg">Batal</a>
+                </Button>
+                <Button variant="outline" as-child>
+                    <a href="/admin/news">Batal</a>
+                </Button>
             </div>
         </form>
     </AdminLayout>

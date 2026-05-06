@@ -2,6 +2,7 @@
 
 namespace App\Models\Content;
 
+use Database\Factories\Content\NewsFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,11 @@ use Illuminate\Support\Str;
 class News extends Model
 {
     use HasFactory, HasUuids;
+
+    protected static function newFactory(): NewsFactory
+    {
+        return NewsFactory::new();
+    }
 
     protected $fillable = [
         'judul',
