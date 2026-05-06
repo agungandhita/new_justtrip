@@ -51,13 +51,13 @@ import { Link } from '@inertiajs/vue3';
                             </a>
                         </li>
                         <li>
-                            <Link href="/packages" class="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
+                            <Link href="/paket-wisata" class="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
                                 <i class="fas fa-route w-4 mr-3"></i>
                                 Paket Tour
                             </Link>
                         </li>
                         <li>
-                            <Link href="/about" class="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
+                            <Link href="/tentang-kami" class="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
                                 <i class="fas fa-info-circle w-4 mr-3"></i>
                                 Tentang Kami
                             </Link>

@@ -82,15 +82,15 @@ const routeIs = (path: string) => {
                         Beranda
                     </Link>
 
-                    <Link href="/destinations" :class="['text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200', routeIs('/destinations') ? 'text-blue-600' : '']">
+                    <Link href="/paket-wisata" :class="['text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200', routeIs('/paket-wisata') ? 'text-blue-600' : '']">
                         Destinasi
                     </Link>
                     
-                    <Link href="/opentrip" :class="['text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200', routeIs('/opentrip') ? 'text-blue-600' : '']">
-                        Opentrip
+                    <Link href="/open-trip" :class="['text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200', routeIs('/open-trip') ? 'text-blue-600' : '']">
+                        Open Trip
                     </Link>
 
-                    <Link href="/about" :class="['text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200', routeIs('/about') ? 'text-blue-600' : '']">
+                    <Link href="/tentang-kami" :class="['text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200', routeIs('/tentang-kami') ? 'text-blue-600' : '']">
                         Tentang Kami
                     </Link>
                 </div>
@@ -148,7 +148,7 @@ const routeIs = (path: string) => {
                         <Link href="/login" class="px-4 py-2 font-medium text-gray-700 transition-colors duration-200 hover:text-blue-600">
                             Masuk
                         </Link>
-                        <Link href="/register" class="px-4 py-2 font-medium text-white transition-colors duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">
+                        <Link href="/daftar" class="px-4 py-2 font-medium text-white transition-colors duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">
                             Daftar
                         </Link>
                     </div>
@@ -170,15 +170,15 @@ const routeIs = (path: string) => {
                     <i class="mr-2 fas fa-home"></i> Beranda
                 </Link>
 
-                <Link href="/destinations" :class="['block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 rounded-lg', routeIs('/destinations') ? 'text-blue-600 bg-blue-50' : '']">
+                <Link href="/paket-wisata" :class="['block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 rounded-lg', routeIs('/paket-wisata') ? 'text-blue-600 bg-blue-50' : '']">
                     <i class="mr-2 fas fa-map-marked-alt"></i> Destinasi
                 </Link>
 
-                <Link href="/opentrip" :class="['block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 rounded-lg', routeIs('/opentrip') ? 'text-blue-600 bg-blue-50' : '']">
-                    <i class="mr-2 fas fa-route"></i> Opentrip
+                <Link href="/open-trip" :class="['block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 rounded-lg', routeIs('/open-trip') ? 'text-blue-600 bg-blue-50' : '']">
+                    <i class="mr-2 fas fa-route"></i> Open Trip
                 </Link>
 
-                <Link href="/about" :class="['block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 rounded-lg', routeIs('/about') ? 'text-blue-600 bg-blue-50' : '']">
+                <Link href="/tentang-kami" :class="['block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 rounded-lg', routeIs('/tentang-kami') ? 'text-blue-600 bg-blue-50' : '']">
                     <i class="mr-2 fas fa-info-circle"></i> Tentang Kami
                 </Link>
 
@@ -197,7 +197,7 @@ const routeIs = (path: string) => {
                     <Link href="/login" class="block px-3 py-2 font-medium text-gray-700 transition-colors duration-200 rounded-lg hover:text-blue-600">
                         <i class="mr-2 fas fa-sign-in-alt"></i> Masuk
                     </Link>
-                    <Link href="/register" class="block px-3 py-2 font-medium text-white transition-colors duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">
+                    <Link href="/daftar" class="block px-3 py-2 font-medium text-white transition-colors duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">
                         <i class="mr-2 fas fa-user-plus"></i> Daftar
                     </Link>
                 </div>

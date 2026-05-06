@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\AboutController;
-use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Frontend\AboutController;
+use App\Http\Controllers\Frontend\ArticleController;
 use App\Http\Controllers\Frontend\BookingController;
-use App\Http\Controllers\GalleryController;
-use App\Http\Controllers\GuestBookingController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PackageController;
-use App\Http\Controllers\SpecialOfferController;
+use App\Http\Controllers\Frontend\GalleryController;
+use App\Http\Controllers\Frontend\GuestBookingController;
+use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\OpenTripController;
+use App\Http\Controllers\Frontend\PackageController;
+use App\Http\Controllers\Frontend\SpecialOfferController;
 use App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +24,7 @@ Route::prefix('paket-wisata')->name('packages.')->group(function () {
 });
 
 // Open Trip
-Route::get('/open-trip', [\App\Http\Controllers\Frontend\OpenTripController::class, 'index'])->name('open-trip.index');
+Route::get('/open-trip', [OpenTripController::class, 'index'])->name('open-trip.index');
 
 // Special Offers
 Route::prefix('promo')->name('special-offers.')->group(function () {

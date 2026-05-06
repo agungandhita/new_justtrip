@@ -22,7 +22,7 @@ export type HargaGroupTier = {
 }
 
 export type Layanan = {
-    layanan_id: string
+    id: string
     nama_layanan: string
     jenis_layanan: 'open_trip' | 'private_trip' | 'request_trip'
     wilayah: 'domestik' | 'internasional' | null

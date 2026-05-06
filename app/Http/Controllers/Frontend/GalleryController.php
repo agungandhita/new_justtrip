@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Frontend;
 
+use App\Http\Controllers\Controller;
 use App\Services\Gallery\GalleryInterface;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,7 +16,7 @@ class GalleryController extends Controller
     {
         $galleries = $this->galleryService->getGalleries($request->only(['kategori', 'search']));
 
-        return Inertia::render('Gallery/Index', [
+        return Inertia::render('Frontend/Galeri/Index', [
             'galleries' => $galleries,
             'filters'   => $request->only(['kategori', 'search']),
         ]);
@@ -25,6 +26,6 @@ class GalleryController extends Controller
     {
         $gallery = $this->galleryService->getGallery($slug);
 
-        return Inertia::render('Gallery/Show', compact('gallery'));
+        return Inertia::render('Frontend/Galeri/Show', compact('gallery'));
     }
 }

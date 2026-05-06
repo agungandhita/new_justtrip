@@ -189,7 +189,7 @@ const removeItineraryDay = (index: number) => {
 }
 
 function submit() {
-    form.post(`/admin/layanan/${props.layanan.layanan_id}`)
+    form.post(`/admin/layanan/${props.layanan.id}`)
 }
 </script>
 
@@ -204,7 +204,7 @@ function submit() {
         </PageHeader>
 
         <!-- Main Wizard Container -->
-        <div class="max-w-4xl bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-8">
+        <div class="w-full bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-8">
             
             <!-- Wizard Headers (Progress) -->
             <div class="flex flex-col md:flex-row border-b border-slate-200 bg-slate-50/50 overflow-x-auto">

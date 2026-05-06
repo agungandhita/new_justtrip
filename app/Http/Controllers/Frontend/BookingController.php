@@ -27,7 +27,7 @@ class BookingController extends Controller
     {
         $layanan = $this->layananService->findById($layananId);
 
-        return Inertia::render('Booking/Create', compact('layanan'));
+        return Inertia::render('Frontend/Booking/Create', compact('layanan'));
     }
 
     public function createFromOffer(string $slug): Response
@@ -35,7 +35,7 @@ class BookingController extends Controller
         $offer   = $this->offerService->getOffer($slug);
         $layanan = $offer->layanan;
 
-        return Inertia::render('Booking/Create', compact('layanan', 'offer'));
+        return Inertia::render('Frontend/Booking/Create', compact('layanan', 'offer'));
     }
 
     public function store(StoreBookingRequest $request): RedirectResponse
@@ -59,21 +59,21 @@ class BookingController extends Controller
     {
         $booking = $this->bookingService->getBookingByNumber($bookingNumber);
 
-        return Inertia::render('Booking/Success', compact('booking'));
+        return Inertia::render('Frontend/Booking/Success', compact('booking'));
     }
 
     public function index(): Response
     {
         $bookings = $this->bookingService->getUserBookings(Auth::id());
 
-        return Inertia::render('Booking/Index', compact('bookings'));
+        return Inertia::render('Frontend/Booking/Index', compact('bookings'));
     }
 
     public function show(string $bookingId): Response
     {
         $booking = $this->bookingService->getBookingDetail($bookingId, Auth::id());
 
-        return Inertia::render('Booking/Show', compact('booking'));
+        return Inertia::render('Frontend/Booking/Show', compact('booking'));
     }
 
     public function cancel(string $bookingId): RedirectResponse

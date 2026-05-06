@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
 import FrontendLayout from '@/layouts/FrontendLayout.vue';
-import { store } from '@/actions/App/Http/Controllers/GuestBookingController';
+import { store } from '@/actions/App/Http/Controllers/Frontend/GuestBookingController';
 
 defineProps<{
     openTrips: any;

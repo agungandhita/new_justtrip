@@ -26,6 +26,8 @@ class Layanan extends Model
 
     protected $table = 'layanan';
 
+    protected $appends = ['harga_format'];
+
     protected $fillable = [
         'nama_layanan',
         'slug',

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Frontend;
 
+use App\Http\Controllers\Controller;
 use App\Services\Home\HomeInterface;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -13,6 +14,6 @@ class HomeController extends Controller
 
     public function index(): Response
     {
-        return Inertia::render('Welcome', $this->homeService->getHomeData(Auth::user()));
+        return Inertia::render('Frontend/Home/Index', $this->homeService->getHomeData(Auth::user()));
     }
 }

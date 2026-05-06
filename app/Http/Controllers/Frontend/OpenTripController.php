@@ -17,7 +17,7 @@ class OpenTripController extends Controller
         // We fetch active Open Trips via LayananService using 'jenis_layanan' => 'open_trip'
         $openTrips = $this->layananService->getAll(['jenis_layanan' => 'open_trip', 'status' => 'aktif']);
 
-        return Inertia::render('OpenTrip', [
+        return Inertia::render('Frontend/OpenTrip/Index', [
             'openTrips' => $openTrips,
         ]);
     }

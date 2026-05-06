@@ -1,268 +1,109 @@
 <script setup lang="ts">
 import FrontendLayout from '@/layouts/FrontendLayout.vue'
+import { Link, router } from '@inertiajs/vue3'
+import { ref } from 'vue'
+import type { SpecialOffer } from '@/types'
+
+const props = defineProps<{
+    offers: SpecialOffer[]
+    filters?: { search?: string }
+}>()
+
+const search = ref(props.filters?.search ?? '')
+const doSearch = () => {
+    router.get('/promo', { search: search.value }, { preserveState: true })
+}
 </script>
 
 <template>
-    <FrontendLayout>
-        
-<!-- Floating Navbar -->
-<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl rounded-full z-50 border border-white/20 dark:border-slate-800/50 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(30,64,175,0.1)] flex justify-between items-center px-8 py-3 font-plus-jakarta-sans text-sm font-semibold tracking-tight">
-<!-- Brand Logo -->
-<div class="flex items-center gap-2">
-<div class="w-10 h-10 bg-blue-800 dark:bg-blue-400 rounded-full flex items-center justify-center">
-<span class="text-white font-bold text-xl">J</span>
-</div>
-<span class="text-2xl font-extrabold text-blue-800 dark:text-blue-400 tracking-tighter">Justtrip</span>
-</div>
-<!-- Navigation Links -->
-<div class="hidden md:flex items-center gap-8">
-<a class="text-blue-800 dark:text-blue-400 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-orange-500" href="#">Beranda</a>
-<a class="text-slate-600 dark:text-slate-400 hover:text-blue-700 transition-colors" href="#">Destinasi</a>
-<a class="text-slate-600 dark:text-slate-400 hover:text-blue-700 transition-colors" href="#">Tur Terbuka</a>
-<a class="text-slate-600 dark:text-slate-400 hover:text-blue-700 transition-colors" href="#">Promo</a>
-<a class="text-slate-600 dark:text-slate-400 hover:text-blue-700 transition-colors" href="#">Tentang Kami</a>
-</div>
-<!-- Trailing Action -->
-<div>
-<button class="bg-blue-800 dark:bg-blue-600 text-white px-8 py-2.5 rounded-full font-bold text-sm shadow-md hover:bg-blue-700 dark:hover:bg-blue-500 transition-all active:scale-95 duration-200">
-      Daftar
-    </button>
-</div>
-</nav>
-<main class="pt-24 pb-12">
-<!-- Hero Seasonal Banner -->
-<section class="px-4 max-w-[1200px] mx-auto mb-12">
-<div class="relative w-full aspect-[21/9] md:aspect-[3/1] rounded-xl overflow-hidden group">
-<div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10"></div>
-<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Tropical beach with palm trees and turquoise water" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOqDWqs4DNt5cF5Ul_hXWzmvgmg3DMhEU6zcUOqyrmIZMNQ7uVRV5KqP4kxIJkvqRct_0LPAOptZfnoHxfe0EavNfQjheEC5DhhXJ1xQ0FrYNT9eVBEe4v9kvvzHF1H-5bKGKgh-fXbScPZeq0dbPvdFrNlkBFdLHaRi14_-APG2q9ei_IFpNk4tfkFC5IkUj9Nyp4FcoDEjSbpKo3St8zYUjLkl0Kvscl_zw7qHMETAxW4-zXMVD7ZfSl2TzxIOvpDq2yLuBFwWLd"/>
-<div class="relative z-20 h-full flex flex-col justify-center p-8 md:p-16">
-<span class="inline-block bg-primary text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4">Waktu Terbatas</span>
-<h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4 leading-tight">Obral Besar <br/><span class="text-primary">Musim Panas</span></h1>
-<p class="text-white/90 text-lg max-w-md mb-8">Diskon hingga 65% untuk destinasi tropis pilihan. Jangan tunggu lagi, penawaran ini akan berakhir dalam:</p>
-<div class="flex gap-4">
-<div class="flex flex-col items-center">
-<div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg w-16 h-16 flex items-center justify-center">
-<span class="text-2xl font-bold text-white">Hari</span>
-</div>
-<span class="text-[10px] uppercase text-white/70 mt-1 font-bold">Hari</span>
-</div>
-<div class="flex flex-col items-center">
-<div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg w-16 h-16 flex items-center justify-center">
-<span class="text-2xl font-bold text-white">Jam</span>
-</div>
-<span class="text-[10px] uppercase text-white/70 mt-1 font-bold">Jam</span>
-</div>
-<div class="flex flex-col items-center">
-<div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg w-16 h-16 flex items-center justify-center">
-<span class="text-2xl font-bold text-white">Menit</span>
-</div>
-<span class="text-[10px] uppercase text-white/70 mt-1 font-bold">Menit</span>
-</div>
-<div class="flex flex-col items-center">
-<div class="bg-primary/80 backdrop-blur-md border border-primary/20 rounded-lg w-16 h-16 flex items-center justify-center shadow-[0_0_15px_rgba(236,91,19,0.5)]">
-<span class="text-2xl font-bold text-white">Detik</span>
-</div>
-<span class="text-[10px] uppercase text-white/70 mt-1 font-bold">Detik</span>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Flash Sale Header -->
-<section class="px-4 max-w-[1200px] mx-auto mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
-<div>
-<h2 class="text-3xl font-bold dark:text-white">Penawaran Kilat Terpanas</h2>
-<p class="text-slate-500 dark:text-slate-400">Diskon eksklusif 24 jam untuk pengalaman peringkat teratas</p>
-</div>
-<div class="flex gap-2">
-<button class="bg-primary/10 text-primary border border-primary/20 px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary/20 transition-colors">Lihat Semua</button>
-</div>
-</section>
-<!-- Promo Cards Grid -->
-<section class="px-4 max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-<!-- Card 1 -->
-<div class="bg-white dark:bg-slate-800/50 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all group">
-<div class="relative h-48">
-<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Santorini Greece sunset with white buildings" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuEri83j9ss0A_WW69NaY--uHacVUSz-NkM1nlLnHAMD820imf591zkJZLvAdZQswcoBmewKTffbfMkX5QpanxzpZqM9c07AGoOf2vGQHB3_JcbzBTwAYkYhUrYTGB7c1QqpEJcTGhFkGu0fPIOhJvhDqEF5ZvryhilD6VyZwr6PgUnCDcxksJ1wjUU8op_46pvLvA2d3aJassoDFSHZ8-6xGgNFlmf4mbXmewRP18LGLOputWJyIFHb3Skt_Th295Ixl4eNeA4gOK"/>
-<div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 uppercase tracking-tighter"><span class="material-symbols-outlined text-sm">local_fire_department</span> Permintaan Tinggi</div>
-<div class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">Berakhir dalam 08:22:15</div>
-</div>
-<div class="p-5">
-<div class="flex justify-between items-start mb-2">
-<h3 class="font-bold text-lg leading-tight">7-Day Greek Islands Escape</h3>
-<div class="flex items-center text-primary">
-<span class="material-symbols-outlined text-sm">star</span>
-<span class="text-xs font-bold ml-1">4.9</span>
-</div>
-</div>
-<p class="text-slate-500 dark:text-slate-400 text-sm mb-4 line-clamp-2">Tur inklusif Mykonos, Santorini, dan Kreta dengan hotel butik.</p>
-<div class="flex items-center justify-between mt-auto">
-<div class="flex flex-col">
-<span class="text-slate-400 line-through text-sm font-medium">$2,450</span>
-<span class="text-2xl font-extrabold text-primary">$1,199</span>
-</div>
-<button class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg font-bold text-sm transition-all shadow-lg shadow-primary/20">Pesan Sekarang</button>
-</div>
-</div>
-</div>
-<!-- Card 2 -->
-<div class="bg-white dark:bg-slate-800/50 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all group">
-<div class="relative h-48">
-<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Tokyo city lights at night" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYJDEvcvIRn2PYmzuLYIJX4Dn3NMiDwfVIOEKpjzUhu6Cy0hI9UVSCCITxni_ewexiXY1svguefYioFX-C7rgcOKgMdImzbevgMI_5ay8D8hxIFaC-FFe8qA34NR8Ntm0elj_qriAP-nk4Mf7FRc3nEjvka1Pgy1lExwmIMmiZNSoP_MrtWFfjlYa-79nHGsy5vvC_YRXUaxSVK_evVPKNpstAr8uxVdO24t8h6xPy7H0L2HVbEsq3-aPh9YVU8hvJmVsRING18013"/>
-<div class="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-tighter">Promo Kilat</div>
-<div class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">Berakhir dalam 04:15:30</div>
-</div>
-<div class="p-5">
-<div class="flex justify-between items-start mb-2">
-<h3 class="font-bold text-lg leading-tight">Tokyo &amp; Kyoto Tech &amp; Tradition</h3>
-<div class="flex items-center text-primary">
-<span class="material-symbols-outlined text-sm">star</span>
-<span class="text-xs font-bold ml-1">4.8</span>
-</div>
-</div>
-<p class="text-slate-500 dark:text-slate-400 text-sm mb-4 line-clamp-2">Rasakan kontras antara Tokyo yang ultra-modern dan kuil-kuil Kyoto yang bersejarah.</p>
-<div class="flex items-center justify-between mt-auto">
-<div class="flex flex-col">
-<span class="text-slate-400 line-through text-sm font-medium">$1,890</span>
-<span class="text-2xl font-extrabold text-primary">$1,250</span>
-</div>
-<button class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg font-bold text-sm transition-all shadow-lg shadow-primary/20">Pesan Sekarang</button>
-</div>
-</div>
-</div>
-<!-- Card 3 -->
-<div class="bg-white dark:bg-slate-800/50 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all group">
-<div class="relative h-48">
-<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Paris Eiffel tower in autumn" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQAunjjDK-WEClxlJARLZSLa99MkOshixCfibbRshkIcL-gcgROmKJny2X8o-M-njeRodtvTqyZn7yCfskWoJXhG8JCO1N48wmSnkDjYTOGwIHMrPuXT4WqybS-yYU_acuUPFCNkAu7RRavYmf0h-gR6YNLI11miyWPebuC7vV8aXSyIQ8LtqIxHu9EYyCAZELSWAzmiSa_ALH4dKsrUPUSUTc8dJS8Pqqoa7NriarhPfRrulmS-UEIzllBy2Yy39i2pGJYkW0Z5zo"/>
-<div class="absolute top-3 left-3 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 uppercase tracking-tighter"><span class="material-symbols-outlined text-sm">check_circle</span> Penawaran Terverifikasi</div>
-<div class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">Berakhir dalam 12:05:00</div>
-</div>
-<div class="p-5">
-<div class="flex justify-between items-start mb-2">
-<h3 class="font-bold text-lg leading-tight">Paris Romantic Weekend</h3>
-<div class="flex items-center text-primary">
-<span class="material-symbols-outlined text-sm">star</span>
-<span class="text-xs font-bold ml-1">4.7</span>
-</div>
-</div>
-<p class="text-slate-500 dark:text-slate-400 text-sm mb-4 line-clamp-2">Penerbangan kelas bisnis dan menginap di hotel mewah dekat Champs-Élysées.</p>
-<div class="flex items-center justify-between mt-auto">
-<div class="flex flex-col">
-<span class="text-slate-400 line-through text-sm font-medium">$950</span>
-<span class="text-2xl font-extrabold text-primary">$499</span>
-</div>
-<button class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg font-bold text-sm transition-all shadow-lg shadow-primary/20">Pesan Sekarang</button>
-</div>
-</div>
-</div>
-</section>
-<!-- Category Discounts Section -->
-<section class="px-4 max-w-[1200px] mx-auto mb-16">
-<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-<div class="bg-slate-900 rounded-2xl p-8 flex items-center justify-between overflow-hidden relative group">
-<div class="relative z-10 max-w-[60%]">
-<h3 class="text-white text-3xl font-bold mb-2">Hanya Tiket Pesawat</h3>
-<p class="text-white/70 mb-6">Terbang ke lebih dari 150+ destinasi dengan tarif mitra maskapai eksklusif.</p>
-<span class="text-primary text-5xl font-black block mb-6">-40%</span>
-<button class="bg-white text-slate-900 px-6 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform">Cari Penerbangan</button>
-</div>
-<span class="material-symbols-outlined text-[180px] text-white/5 absolute -right-10 -bottom-10 rotate-12 group-hover:rotate-0 transition-transform duration-500">flight</span>
-</div>
-<div class="bg-primary rounded-2xl p-8 flex items-center justify-between overflow-hidden relative group">
-<div class="relative z-10 max-w-[60%]">
-<h3 class="text-white text-3xl font-bold mb-2">Hotel Early Bird</h3>
-<p class="text-white/80 mb-6">Pesan 60 hari sebelumnya dan dapatkan penghematan besar untuk penginapan premium.</p>
-<span class="text-white text-5xl font-black block mb-6">Diskon s/d $500</span>
-<button class="bg-slate-900 text-white px-6 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform">Cari Hotel</button>
-</div>
-<span class="material-symbols-outlined text-[180px] text-white/10 absolute -right-10 -bottom-10 -rotate-12 group-hover:rotate-0 transition-transform duration-500">hotel</span>
-</div>
-</div>
-</section>
-<!-- Newsletter / Urgency Banner -->
-<section class="px-4 max-w-[1200px] mx-auto mb-20">
-<div class="bg-background-dark text-white rounded-3xl p-10 md:p-16 text-center relative overflow-hidden">
-<div class="absolute inset-0 bg-primary/10 mix-blend-overlay"></div>
-<h2 class="text-3xl md:text-4xl font-bold mb-4 relative z-10">Jangan lewatkan penurunan harga lagi</h2>
-<p class="text-slate-400 mb-8 max-w-xl mx-auto relative z-10">Bergabunglah dengan 500.000+ pelancong yang mendapatkan penawaran rahasia kami langsung ke kotak masuk setiap hari Selasa.</p>
-<form class="flex flex-col md:flex-row gap-3 max-w-lg mx-auto relative z-10" onsubmit="return false;">
-<input class="flex-1 bg-white/10 border border-white/20 rounded-xl px-5 py-3 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Masukkan alamat email Anda" type="email"/>
-<button class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-bold transition-all whitespace-nowrap">Berlangganan Sekarang</button>
-</form>
-</div>
-</section>
-</main>
-<!-- Navy Footer -->
-<footer class="bg-slate-950 text-slate-400 py-16 px-4">
-<div class="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12">
-<div class="col-span-2 lg:col-span-1">
-<div class="flex items-center gap-2 text-white font-bold text-xl mb-6">
-<span class="material-symbols-outlined text-primary">flight_takeoff</span>
-<span>Justtrip</span>
-</div>
-<p class="text-sm leading-relaxed mb-6">Menjadikan perjalanan dapat diakses dan terjangkau bagi semua orang. Petualangan Anda berikutnya dimulai dengan satu klik.</p>
-<div class="flex gap-4">
-<a class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#"><span class="material-symbols-outlined text-sm">share</span></a>
-<a class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#"><span class="material-symbols-outlined text-sm">camera</span></a>
-<a class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#"><span class="material-symbols-outlined text-sm">public</span></a>
-</div>
-</div>
-<div>
-<h4 class="text-white font-bold mb-6">Instal Aplikasi</h4>
-<ul class="space-y-4 text-sm">
-<li><a class="hover:text-primary transition-colors" href="#">Tentang Kami</a></li>
-<li><a class="hover:text-primary transition-colors" href="#">Karir</a></li>
-<li><a class="hover:text-primary transition-colors" href="#">Blog</a></li>
-<li><a class="hover:text-primary transition-colors" href="#">Press</a></li>
-</ul>
-</div>
-<div>
-<h4 class="text-white font-bold mb-6">Instal Aplikasi</h4>
-<ul class="space-y-4 text-sm">
-<li><a class="hover:text-primary transition-colors" href="#">Eropa</a></li>
-<li><a class="hover:text-primary transition-colors" href="#">Asia</a></li>
-<li><a class="hover:text-primary transition-colors" href="#">Amerika</a></li>
-<li><a class="hover:text-primary transition-colors" href="#">Oceania</a></li>
-</ul>
-</div>
-<div>
-<h4 class="text-white font-bold mb-6">Instal Aplikasi</h4>
-<ul class="space-y-4 text-sm">
-<li><a class="hover:text-primary transition-colors" href="#">Pusat Bantuan</a></li>
-<li><a class="hover:text-primary transition-colors" href="#">Pusat Keamanan</a></li>
-<li><a class="hover:text-primary transition-colors" href="#">Ketentuan Layanan</a></li>
-<li><a class="hover:text-primary transition-colors" href="#">Kebijakan Privasi</a></li>
-</ul>
-</div>
-<div class="hidden lg:block">
-<h4 class="text-white font-bold mb-6">Instal Aplikasi</h4>
-<div class="flex flex-col gap-3">
-<div class="bg-white/5 border border-white/10 p-3 rounded-lg flex items-center gap-3 cursor-pointer hover:border-primary transition-colors">
-<span class="material-symbols-outlined text-white">phone_iphone</span>
-<div class="text-[10px]">
-<p class="text-white/50 uppercase">Unduh di</p>
-<p class="text-white font-bold text-xs">App Store</p>
-</div>
-</div>
-<div class="bg-white/5 border border-white/10 p-3 rounded-lg flex items-center gap-3 cursor-pointer hover:border-primary transition-colors">
-<span class="material-symbols-outlined text-white">play_store_installed</span>
-<div class="text-[10px]">
-<p class="text-white/50 uppercase">Dapatkan di</p>
-<p class="text-white font-bold text-xs">Google Play</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="max-w-[1200px] mx-auto mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
-<p>© 2024 Justtrip. Seluruh hak cipta dilindungi undang-undang.</p>
-<div class="flex gap-6">
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">verified_user</span> Pembayaran Aman</span>
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">language</span> Bahasa Indonesia</span>
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm"><span class="material-symbols-outlined text-sm">verified_user</span> Pembayaran Aman</span> USD</span>
-</div>
-</div>
-</footer>
+    <FrontendLayout title="Promo Spesial">
+        <!-- Hero -->
+        <section class="relative h-[320px] overflow-hidden">
+            <img src="/image/2-SLIDE.png" alt="Promo Hero" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-blue-900/40 to-transparent flex items-end p-10 md:p-16">
+                <div>
+                    <span class="inline-block px-4 py-1 bg-orange-500 text-white text-xs font-bold rounded-full mb-3 uppercase tracking-wider">
+                        Penawaran Terbatas
+                    </span>
+                    <h1 class="text-white text-3xl md:text-5xl font-bold">Promo & Diskon Spesial</h1>
+                    <p class="text-blue-100 mt-2">Dapatkan harga terbaik untuk perjalanan impianmu</p>
+                </div>
+            </div>
+        </section>
 
+        <!-- Search -->
+        <div class="max-w-7xl mx-auto px-4 md:px-10 py-8">
+            <form @submit.prevent="doSearch" class="flex gap-3 max-w-md">
+                <div class="relative flex-1">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input
+                        v-model="search"
+                        type="text"
+                        placeholder="Cari promo..."
+                        class="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-700 focus:border-blue-700 bg-white text-sm"
+                    >
+                </div>
+                <button type="submit" class="px-6 py-3 bg-blue-700 text-white rounded-xl font-semibold hover:bg-blue-800 transition-colors text-sm">
+                    Cari
+                </button>
+            </form>
+        </div>
+
+        <!-- Offers Grid -->
+        <div class="max-w-7xl mx-auto px-4 md:px-10 pb-20">
+            <!-- Empty State -->
+            <div v-if="!offers || offers.length === 0" class="text-center py-20">
+                <i class="fas fa-tags text-6xl text-slate-300 mb-4"></i>
+                <h3 class="text-xl font-bold text-slate-500 mb-2">Tidak ada promo saat ini</h3>
+                <p class="text-slate-400">Pantau terus halaman ini untuk promo terbaru</p>
+            </div>
+
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div
+                    v-for="offer in offers"
+                    :key="offer.id"
+                    class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-lg hover:shadow-xl transition-all group"
+                >
+                    <!-- Image with badge -->
+                    <div class="relative aspect-[16/9] overflow-hidden">
+                        <img
+                            :src="offer.gambar ? `/storage/${offer.gambar}` : '/image/3-SLIDE.png'"
+                            :alt="offer.title"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        >
+                        <div class="absolute top-3 left-3 bg-orange-500 text-white text-sm font-bold px-3 py-1 rounded-full">
+                            {{ offer.diskon_persen ?? '0' }}% OFF
+                        </div>
+                        <div v-if="offer.is_featured" class="absolute top-3 right-3 bg-blue-700 text-white text-xs font-bold px-2 py-1 rounded-full">
+                            FEATURED
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-1 line-clamp-2">{{ offer.title }}</h3>
+                        <p v-if="offer.deskripsi" class="text-slate-500 text-sm mb-4 line-clamp-2">{{ offer.deskripsi }}</p>
+
+                        <div class="flex items-end justify-between mb-4">
+                            <div>
+                                <p class="text-xs text-slate-400 line-through">{{ offer.formatted_original_price }}</p>
+                                <p class="text-xl font-bold text-blue-700">{{ offer.formatted_price }}</p>
+                            </div>
+                            <div v-if="offer.valid_until" class="text-right">
+                                <p class="text-xs text-slate-400">Berlaku hingga</p>
+                                <p class="text-sm font-semibold text-orange-600">{{ offer.valid_until }}</p>
+                            </div>
+                        </div>
+
+                        <Link
+                            :href="`/booking/promo/${offer.slug}`"
+                            class="block w-full text-center bg-blue-700 text-white py-3 rounded-xl font-bold hover:bg-blue-800 transition-colors text-sm"
+                        >
+                            Gunakan Promo
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </div>
     </FrontendLayout>
 </template>

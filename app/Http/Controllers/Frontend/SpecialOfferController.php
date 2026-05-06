@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Frontend;
 
+use App\Http\Controllers\Controller;
 use App\Services\SpecialOffer\SpecialOfferInterface;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,7 +16,7 @@ class SpecialOfferController extends Controller
     {
         $offers = $this->offerService->getOffers($request->only(['search']));
 
-        return Inertia::render('SpecialOffers/Index', [
+        return Inertia::render('Frontend/Promo/Index', [
             'offers'  => $offers,
             'filters' => $request->only(['search']),
         ]);
@@ -25,6 +26,6 @@ class SpecialOfferController extends Controller
     {
         $offer = $this->offerService->getOffer($slug);
 
-        return Inertia::render('SpecialOffers/Show', compact('offer'));
+        return Inertia::render('Frontend/Promo/Index', compact('offer'));
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Frontend;
 
+use App\Http\Controllers\Controller;
 use App\Services\Review\ReviewInterface;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -14,6 +15,6 @@ class AboutController extends Controller
     {
         $reviews = $this->reviewService->getActive(6);
 
-        return Inertia::render('About', compact('reviews'));
+        return Inertia::render('Frontend/About/Index', compact('reviews'));
     }
 }

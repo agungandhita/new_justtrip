@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Frontend;
 
+use App\Http\Controllers\Controller;
 use App\Services\News\NewsInterface;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,7 +16,7 @@ class ArticleController extends Controller
     {
         $articles = $this->newsService->getArticles($request->only(['kategori', 'search']));
 
-        return Inertia::render('Articles/Index', [
+        return Inertia::render('Frontend/Artikel/Index', [
             'articles' => $articles,
             'filters'  => $request->only(['kategori', 'search']),
         ]);
@@ -26,6 +27,6 @@ class ArticleController extends Controller
         $article = $this->newsService->getArticle($slug);
         $related  = $this->newsService->getRelated($article->id, 3);
 
-        return Inertia::render('Articles/Show', compact('article', 'related'));
+        return Inertia::render('Frontend/Artikel/Show', compact('article', 'related'));
     }
 }

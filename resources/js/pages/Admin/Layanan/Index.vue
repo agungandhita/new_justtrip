@@ -88,7 +88,7 @@ function toggleStatus(id: string) {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow v-for="layanan in layananList.data" :key="layanan.layanan_id">
+                        <TableRow v-for="layanan in layananList.data" :key="layanan.id">
                             <TableCell>
                                 <div class="flex items-center gap-3">
                                     <img v-if="layanan.gambar_utama" :src="layanan.gambar_utama" class="w-9 h-9 rounded-md object-cover flex-shrink-0" />
@@ -110,7 +110,7 @@ function toggleStatus(id: string) {
                             <TableCell>
                                 <div class="flex items-center justify-center gap-1.5">
                                     <Button
-                                        @click="toggleStatus(layanan.layanan_id)"
+                                        @click="toggleStatus(layanan.id)"
                                         variant="outline"
                                         size="sm"
                                         class="gap-1.5 text-xs"
@@ -121,11 +121,11 @@ function toggleStatus(id: string) {
                                         {{ layanan.status === 'aktif' ? 'Aktif' : 'Non-aktif' }}
                                     </Button>
                                     <Button variant="outline" size="icon-sm" as-child>
-                                        <Link :href="`/admin/layanan/${layanan.layanan_id}/edit`">
+                                        <Link :href="`/admin/layanan/${layanan.id}/edit`">
                                             <Edit class="w-3.5 h-3.5" />
                                         </Link>
                                     </Button>
-                                    <Button variant="outline" size="icon-sm" @click="confirmDelete(layanan.layanan_id)"
+                                    <Button variant="outline" size="icon-sm" @click="confirmDelete(layanan.id)"
                                         class="text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive">
                                         <Trash2 class="w-3.5 h-3.5" />
                                     </Button>
